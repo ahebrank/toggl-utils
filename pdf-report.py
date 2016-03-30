@@ -114,8 +114,4 @@ if __name__ == "__main__":
   since = check_week(args.start, snap_start=True)
   until = check_week(args.end, snap_start=False)
 
-  print since
-  print until
-  sys.exit()
-
   filename = get_pdf_report(workspace_id, client_ids, since, until)
