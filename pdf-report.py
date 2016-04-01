@@ -34,7 +34,9 @@ def get_pdf_report(workspace_id, clients, startdate, enddate):
       'workspace_id': workspace_id,
       'since': startdate,
       'until': enddate,
-      'client_ids': ','.join(clients)
+      'client_ids': ','.join(clients),
+      'order_field': 'duration',
+      'order_desc': 'on'
     })
 
   fn = 'Toggl_projects_%s_to_%s.pdf' % (startdate, enddate)
