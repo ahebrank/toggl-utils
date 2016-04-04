@@ -28,7 +28,7 @@ def get_workspace_ids():
   data = get_json("https://www.toggl.com/api/v8/workspaces")
   return ['%s' % workspace['id'] for workspace in data]
 
-def get_pdf_report(workspace_id, clients, startdate, enddate):
+def get_pdf_report(workspace_id, clients, startdate, enddate, output_dir):
   pdf_string = fetch("https://toggl.com/reports/api/v2/summary.pdf", {
       'user_agent': 'biweekly-report-fetcher',
       'workspace_id': workspace_id,
@@ -39,7 +39,7 @@ def get_pdf_report(workspace_id, clients, startdate, enddate):
       'order_desc': 'on'
     })
 
-  fn = 'Toggl_projects_%s_to_%s.pdf' % (startdate, enddate)
+  fn = os.path.join(output_dir, 'Toggl_projects_%s_to_%s.pdf' % (startdate, enddate))
   with open(fn, 'wb') as fout:
     fout.write(pdf_string)
   return fn
@@ -102,6 +102,7 @@ if __name__ == "__main__":
   parser.add_argument('-s', '--start', action='store', help='start date', required=True)
   parser.add_argument('-e', '--end', action='store', help='end date', required=True)
   parser.add_argument('-w', '--workspace', action='store', help='workspace ID', default=None)
+  parser.add_argument('-d', '--dir', action='store', help='output directory', default='.')
   args = parser.parse_args()
 
   if args.workspace is None:
@@ -119,4 +120,9 @@ if __name__ == "__main__":
     print "Date error: %s is after %s." % (since, until)
     sys.exit(1)
 
-  filename = get_pdf_report(workspace_id, client_ids, since, until)
+  output_dir = args.dir
+  if not os.path.exists(output_dir):
+    print "Output directory %s not found" % output_dir
+    sys.exit(1)
+
+  filename = get_pdf_report(workspace_id, client_ids, since, until, output_dir)
