@@ -1,4 +1,4 @@
-import os, urllib2, base64, json, argparse, re, datetime
+import sys, os, urllib2, base64, json, argparse, re, datetime
 
 def fetch(url, params = None):
   username = os.getenv('TOGGL_API_KEY', None)
@@ -68,7 +68,7 @@ def check_week(date, snap_start=True):
       else:
         target_day = 31
         target_month -= 1
-    elif target_day < 21:
+    elif target_day <= 21:
       if snap_start:
         target_day = 16
       else:
@@ -90,7 +90,6 @@ def check_week(date, snap_start=True):
     # a little sanity check on the number of days in a month
     days_in_month = (datetime.date(target_year, target_month + 1, 1) - datetime.date(target_year, target_month, 1)).days
     target_day = min(target_day, days_in_month)
-
     return "%04d-%02d-%02d" % (target_year, target_month, target_day)
 
   # don't know what to do with this format, just use today
@@ -115,5 +114,9 @@ if __name__ == "__main__":
   # a little date validation
   since = check_week(args.start, snap_start=True)
   until = check_week(args.end, snap_start=False)
+
+  if since > until:
+    print "Date error: %s is after %s." % (since, until)
+    sys.exit(1)
 
   filename = get_pdf_report(workspace_id, client_ids, since, until)
