@@ -102,7 +102,7 @@ if __name__ == "__main__":
   parser.add_argument('-s', '--start', action='store', help='start date', required=True)
   parser.add_argument('-e', '--end', action='store', help='end date', required=True)
   parser.add_argument('-w', '--workspace', action='store', help='workspace ID', default=None)
-  parser.add_argument('-d', '--dir', action='store', help='output directory', default='.')
+  parser.add_argument('-d', '--dir', action='store', help='output directory (defaults to pwd)', default='.')
   args = parser.parse_args()
 
   if args.workspace is None:

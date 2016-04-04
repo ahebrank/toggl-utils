@@ -13,7 +13,7 @@ To override, pass parameter `-w <WORKSPACE_ID>`.
 List available parameters with:
 
 ```
-python pdf-report.py
+python pdf-report.py -h
 ```
 
 For example usage, see the *.sh.example file or:
