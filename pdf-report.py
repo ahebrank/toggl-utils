@@ -51,7 +51,7 @@ def check_week(date, snap_start=True):
     return date
 
   today = datetime.datetime.today()
-  
+
   # relative weeks?
   match = re.search(r'^-{0,1}\d+$', date)
   if match:
@@ -88,9 +88,15 @@ def check_week(date, snap_start=True):
       target_month = 1
 
     # a little sanity check on the number of days in a month
-    days_in_month = (datetime.date(target_year, target_month + 1, 1) - datetime.date(target_year, target_month, 1)).days
+    next_month = target_month + 1
+    next_year = target_year
+    if (next_month > 12):
+        next_month -= 12
+        next_year += 1
+    days_in_month = (datetime.date(next_year, next_month, 1) - datetime.date(target_year, target_month, 1)).days
     target_day = min(target_day, days_in_month)
-    return "%04d-%02d-%02d" % (target_year, target_month, target_day)
+    week = "%04d-%02d-%02d" % (target_year, target_month, target_day)
+    return week
 
   # don't know what to do with this format, just use today
   return today.strftime('%Y-%m-%d')
